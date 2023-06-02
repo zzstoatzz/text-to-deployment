@@ -1,0 +1,5 @@
+{
+  "fetch-eth-price": "flows/fetch_eth_price.py:fetch_eth_price",
+  "get-eth-price": "flows/get_eth_price.py:get_eth_price",
+  "get-eth-price-usd": "flows/get_eth_price_usd.py:get_eth_price_usd"
+}

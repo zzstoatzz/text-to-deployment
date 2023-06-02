@@ -3,10 +3,9 @@ from typing import Optional
 
 import marvin
 from marvin import ai_model
-from prefect import flow
-from prefect.deployments import Deployment
+from prefect.deployments import run_deployment
 from prefect.server.schemas.schedules import CronSchedule
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field
 
 def get_function_from_string(func_str: str) -> callable:
     local_namespace = {}
@@ -21,6 +20,10 @@ class PrefectDeployment(BaseModel):
     """A Prefect deployment that is created from a natural language description.
     
     A schedule should only be populated if the user describes a recurring task.
+    
+    The python function and name field should have the same name, but the name
+    of the deployment should be slugified and the name of the function should
+    have underscores instead of dashes.
     """
     python_function: str = Field(
         description=(
@@ -43,7 +46,10 @@ class PrefectDeployment(BaseModel):
     def write_flow_to_file(self):
         """Write the flow to a file."""
         with open(f"flows/{self.name}.py", "w") as f:
-            f.write("@flow\n"+self.python_function)
+            f.write(
+                "from prefect import flow\n\n"
+                "@flow\n"+self.python_function
+            )
     
 if __name__ == "__main__":
     
@@ -59,11 +65,27 @@ if __name__ == "__main__":
         [
             "prefect",
             "deploy",
-            f"{deployment.name}.py:{deployment.name}",
+            f"flows/{deployment.name}.py:{deployment.name}",
             "-n",
             f"{deployment.name}",
             "-p",
             "kubernetes-prd-internal-tools",
         ]
     )
-
+    
+    subprocess.run("git add flows".split())
+    
+    subprocess.run(
+        [
+            "git",
+            "commit",
+            "-m",
+            f"Add {deployment.name} flow.",
+        ]
+    )
+    
+    subprocess.run("git push".split())
+    
+    run_deployment(
+        f"{deployment.name}/{deployment.name.replace('-', '_')}"
+    )
