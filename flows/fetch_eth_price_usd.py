@@ -1,8 +1,8 @@
 from prefect import flow
 
 @flow
-def get_eth_price():
+def fetch_eth_price_usd():
     import requests
     response = requests.get('https://api.coinbase.com/v2/prices/ETH-USD/spot')
-    eth_price = response.json()['data']['amount']
-    return float(eth_price)
+    eth_price_usd = float(response.json()['data']['amount'])
+    return eth_price_usd
