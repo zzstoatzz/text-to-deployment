@@ -11,3 +11,6 @@ deployments:
     name: null
     work_queue_name: null
     job_variables: {}
+  build:
+    - prefect.projects.steps.run_shell_script:
+      script: echo "hello world"

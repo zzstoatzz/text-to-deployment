@@ -1,7 +1,7 @@
 from prefect import flow, task
 
 @task
-async def get_heaviest_pokemon(limit: int = 100):
+async def get_heaviest_pokemon(n: int = 5, limit: int = 100):
     import asyncio
     import httpx
 
@@ -13,7 +13,7 @@ async def get_heaviest_pokemon(limit: int = 100):
             reverse=True
         )
         
-    for i, p in enumerate(sorted_pokemon[:5]):
+    for i, p in enumerate(sorted_pokemon[:n]):
         print(f"{i+1}. {p['name'].capitalize()} (Weight: {p['weight']})")
 
 @flow(log_prints=True)
