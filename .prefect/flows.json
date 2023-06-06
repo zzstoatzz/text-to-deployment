@@ -1,5 +1,7 @@
 {
+  "check-eth-price": "flows/check_eth_price.py:check_eth_price",
   "fetch-eth-price": "flows/fetch_eth_price.py:fetch_eth_price",
   "get-eth-price": "flows/get_eth_price.py:get_eth_price",
-  "get-eth-price-usd": "flows/get_eth_price_usd.py:get_eth_price_usd"
+  "get-eth-price-usd": "flows/get_eth_price_usd.py:get_eth_price_usd",
+  "main-flow": "flows/heaviest_pokemon.py:main_flow"
 }
